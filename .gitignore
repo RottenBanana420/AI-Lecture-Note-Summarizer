@@ -1,0 +1,36 @@
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environments
+.env
+backend/.env
+.venv
+venv/
+env/
+backend/.venv
+backend/venv/
+backend/env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Database
+postgres_data/
+backend/postgres_data/
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+Network Trash Folder
+Temporary Items
+.apdisk

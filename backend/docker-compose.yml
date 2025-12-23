@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg15
+    container_name: lecture_summarizer_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-lecture_summarizer_dev}
+      # Performance tuning for development
+      POSTGRES_INITDB_ARGS: "-E UTF8 --locale=en_US.UTF-8"
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Named volume for data persistence
+      - postgres_data:/var/lib/postgresql/data
+      # Optional: Custom initialization scripts
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-lecture_summarizer_dev}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - backend_network
+
+volumes:
+  postgres_data:
+    driver: local
+    name: lecture_summarizer_postgres_data
+
+networks:
+  backend_network:
+    driver: bridge
+    name: lecture_summarizer_network

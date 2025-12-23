@@ -1,4 +1,4 @@
-# AI Lecture Note Summarizer - Backend
+# AI Lecture Note Summarizer
 
 A FastAPI-based backend application for the AI Lecture Note Summarizer project. This service provides RESTful APIs for processing and summarizing lecture notes using AI/ML models.
 
@@ -16,7 +16,8 @@ Before setting up the project, ensure you have the following installed:
 
 - **pyenv**: Python version management tool
 - **pyenv-virtualenv**: pyenv plugin for managing virtual environments
-- **PostgreSQL**: Database server (version 12 or higher recommended)
+- **PostgreSQL**: Database server (managed via Docker)
+- **Docker & Docker Compose**: For containerized database infrastructure
 - **Git**: Version control system
 
 ### Installing Prerequisites (macOS)
@@ -40,35 +41,21 @@ exec "$SHELL"
 
 ## Project Structure
 
-```
-backend/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI application entry point
-│   ├── api/
-│   │   ├── __init__.py
-│   │   └── v1/              # API version 1
-│   │       ├── __init__.py
-│   │       └── endpoints/   # API endpoints
-│   │           └── __init__.py
-│   ├── core/
-│   │   ├── __init__.py
-│   │   └── config.py        # Configuration management
-│   ├── db/
-│   │   ├── __init__.py
-│   │   └── base.py          # Database base configuration
-│   ├── models/
-│   │   └── __init__.py      # SQLAlchemy models
-│   └── schemas/
-│       └── __init__.py      # Pydantic schemas
-├── alembic/                 # Database migrations
-├── tests/
-│   └── __init__.py
-├── .env.example             # Environment variables template
-├── .gitignore               # Git ignore rules
-├── .python-version          # pyenv virtual environment specification
+```text
+.
+├── backend/                 # FastAPI backend application
+│   ├── app/                 # Application source code
+│   ├── alembic/             # Database migrations
+│   ├── scripts/             # Infrastructure helper scripts
+│   ├── init-scripts/        # Database initialization SQL
+│   ├── tests/               # Backend tests
+│   ├── docker-compose.yml   # Docker services
+│   ├── requirements.txt     # Python dependencies
+│   └── .env.example         # Environment template
+├── docs/                    # Project documentation
+│   └── DATABASE_SETUP.md    # Detailed database setup guide
 ├── README.md                # This file
-└── requirements.txt         # Python dependencies
+└── LICENSE                  # Project license
 ```
 
 ## Setup Instructions
@@ -77,7 +64,7 @@ backend/
 
 ```bash
 git clone <repository-url>
-cd AI-Lecture-Note-Summarizer/backend
+cd AI-Lecture-Note-Summarizer
 ```
 
 ### 2. Set Up Python Virtual Environment
@@ -133,18 +120,17 @@ nano .env  # or use your preferred editor
 
 ### 5. Set Up PostgreSQL Database
 
+The project uses Docker Compose to manage a PostgreSQL instance with the `pgvector` extension.
+
 ```bash
-# Start PostgreSQL service
-brew services start postgresql@15
+# Start the database using the helper script
+./backend/scripts/start-db.sh
 
-# Create database
-createdb lecture_summarizer
-
-# Or using psql
-psql postgres
-CREATE DATABASE lecture_summarizer;
-\q
+# Verify the setup
+./backend/scripts/verify-db.sh
 ```
+
+For detailed database configuration and manual setup instructions, see [docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md).
 
 ### 6. Initialize Database Migrations (When Ready)
 
