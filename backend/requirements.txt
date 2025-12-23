@@ -1,0 +1,15 @@
+# Core FastAPI Framework
+fastapi  # Modern, fast web framework for building APIs with Python 3.7+
+
+# ASGI Server
+uvicorn  # Lightning-fast ASGI server implementation for running FastAPI applications
+
+# Database ORM and Driver
+sqlalchemy  # SQL toolkit and Object-Relational Mapping (ORM) library
+psycopg2-binary  # PostgreSQL database adapter for Python (binary distribution)
+
+# Database Migrations
+alembic  # Lightweight database migration tool for SQLAlchemy
+
+# Environment Variables
+python-dotenv  # Read key-value pairs from .env file and set them as environment variables
