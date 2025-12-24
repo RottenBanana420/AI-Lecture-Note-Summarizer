@@ -6,7 +6,8 @@ A FastAPI-based backend application for the AI Lecture Note Summarizer project. 
 
 - **FastAPI Framework**: Modern, fast (high-performance) web framework for building APIs
 - **PostgreSQL Database**: Robust relational database with SQLAlchemy ORM
-- **pgvector Integration**: Vector similarity search for semantic retrieval of lecture note chunks
+- **pgvector Integration**: High-performance vector similarity search with HNSW indexes for semantic retrieval
+- **Connection Pooling**: Production-ready connection pooling and session management using SQLAlchemy 2.0 best practices
 - **Database Migrations**: Alembic for managing database schema changes
 - **Environment Configuration**: Secure configuration management with python-dotenv and pydantic-settings
 - **Isolated Environment**: Python 3.11 virtual environment using pyenv-virtualenv
@@ -153,18 +154,20 @@ PYTHONPATH=. python scripts/verify_models.py
 
 For detailed database configuration and manual setup instructions, see [docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md).
 
-### 6. Initialize Database Migrations (When Ready)
+### 6. Apply Database Migrations
+
+The database schema is managed via Alembic. Apply the latest migrations to set up your tables and indexes:
 
 ```bash
-# Initialize Alembic (run this once)
-alembic init alembic
-
-# Create initial migration
-alembic revision --autogenerate -m "Initial migration"
-
 # Apply migrations
 alembic upgrade head
 ```
+
+This will:
+
+- Create `users`, `documents`, `summaries`, and `note_chunks` tables
+- Enable `pgvector` extension
+- Create HNSW indexes for fast vector similarity search
 
 ## Running the Application
 
@@ -224,11 +227,19 @@ alembic history
 
 ## Testing
 
+The project uses `pytest` for unit and integration testing. Configuration is located in `pyproject.toml`.
+
 ```bash
-# Run tests (when test suite is implemented)
+# Run all tests
 pytest
 
-# Run with coverage
+# Run only unit tests
+pytest -m unit
+
+# Run integration tests (requires running database)
+pytest -m integration
+
+# Run with coverage (if pytest-cov is installed)
 pytest --cov=app tests/
 ```
 

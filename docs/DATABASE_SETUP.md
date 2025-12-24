@@ -124,34 +124,32 @@ CREATE EXTENSION IF NOT EXISTS vector;
 ### Test Vector Functionality
 
 ```sql
--- Create a test table with vector column (384 dimensions for sentence embeddings)
+-- Create a test table with vector column (1536 dimensions for OpenAI/modern embeddings)
 CREATE TABLE test_embeddings (
     id SERIAL PRIMARY KEY,
     content TEXT NOT NULL,
-    embedding vector(384),
+    embedding vector(1536),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Insert sample data
 INSERT INTO test_embeddings (content, embedding) 
 VALUES 
-    ('Machine learning is fascinating', '[0.1, 0.2, 0.3]'::vector),
-    ('Deep learning uses neural networks', '[0.15, 0.25, 0.35]'::vector),
-    ('Natural language processing', '[0.12, 0.22, 0.32]'::vector);
+    ('Machine learning is fascinating', ('[' || array_to_string(array_fill(0.1, ARRAY[1536]), ',') || ']')::vector),
+    ('Deep learning uses neural networks', ('[' || array_to_string(array_fill(0.2, ARRAY[1536]), ',') || ']')::vector);
 
 -- Perform cosine similarity search
--- The <-> operator calculates L2 distance (Euclidean)
--- The <#> operator calculates negative inner product
--- The <=> operator calculates cosine distance
+-- The <=> operator calculates cosine distance (1 - cosine similarity)
 SELECT 
     content,
-    embedding <-> '[0.1, 0.2, 0.3]'::vector AS distance
+    embedding <=> ('[' || array_to_string(array_fill(0.1, ARRAY[1536]), ',') || ']')::vector AS distance
 FROM test_embeddings
-ORDER BY embedding <-> '[0.1, 0.2, 0.3]'::vector
+ORDER BY embedding <=> ('[' || array_to_string(array_fill(0.1, ARRAY[1536]), ',') || ']')::vector
 LIMIT 5;
 
--- Create an index for faster similarity searches (recommended for production)
-CREATE INDEX ON test_embeddings USING ivfflat (embedding vector_l2_ops) WITH (lists = 100);
+-- Create an HNSW index for faster similarity searches (recommended for production)
+-- Parameters: m=16, ef_construction=64
+CREATE INDEX ON test_embeddings USING hnsw (embedding vector_cosine_ops) WITH (m = 16, ef_construction = 64);
 
 -- Clean up test table
 DROP TABLE test_embeddings;
