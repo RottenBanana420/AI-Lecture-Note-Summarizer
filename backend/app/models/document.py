@@ -98,7 +98,6 @@ class Document(Base, BaseModelMixin):
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
-        index=True,
         comment="Timestamp when the document was uploaded"
     )
     

@@ -10,6 +10,8 @@ A FastAPI-based backend application for the AI Lecture Note Summarizer project. 
 - **Middleware Stack**: Production-ready middleware for Request ID tracing, GZip compression, and response timing
 - **Enhanced Logging**: Structured logging for requests/responses and automatic error tracking
 - **Health Monitoring**: Multiple health check endpoints for system, database, and connection pool status
+- **CRUD Repository Pattern**: Generic base class for common database operations with model-specific extensions
+- **Global Exception Handling**: Custom handlers for SQLAlchemy, validation, and general system errors
 - **Connection Pooling**: Optimized session management with SQLAlchemy 2.0 best practices
 - **Database Migrations**: Alembic for managing database schema changes
 - **Type-Safe Configuration**: Secure settings management with Pydantic Settings and strict validation
@@ -66,8 +68,15 @@ exec "$SHELL"
 │   │   │   ├── config.py    # Settings and environment validation
 │   │   │   ├── database.py  # SQLAlchemy engine and pooling
 │   │   │   └── middleware.py # Request tracing and logging middleware
+│   │   ├── crud/            # CRUD repository layer
+│   │   │   ├── base.py      # Base CRUD class
+│   │   │   ├── exceptions.py # CRUD-specific exceptions
+│   │   │   └── user.py      # User-specific CRUD operations
 │   │   ├── models/          # SQLAlchemy ORM models
+│   │   │   ├── base_model.py # Base model with common fields
+│   │   │   └── user.py      # User model definition
 │   │   ├── schemas/         # Pydantic models (DTOs)
+│   │   ├── db/              # Database base utilities
 │   │   └── main.py          # FastAPI application entry point
 │   ├── alembic/             # Database migrations
 │   ├── scripts/             # Infrastructure and verification scripts
@@ -75,8 +84,8 @@ exec "$SHELL"
 │   │   ├── verify-db.sh     # Verify DB and extension status
 │   │   └── verify_models.py # Verify SQLAlchemy model definitions
 │   ├── init-scripts/        # Database initialization SQL (pgvector)
-│   ├── tests/               # Backend tests
-│   ├── docker-compose.yml   # Docker services
+│   ├── tests/               # Backend tests (pytest)
+│   ├── docker-compose.yml   # Docker services (database, pgvector)
 │   ├── requirements.txt     # Python dependencies
 │   └── .env.example         # Environment template
 ├── docs/                    # Project documentation
