@@ -270,6 +270,8 @@ alembic history
 
 The project uses `pytest` for unit and integration testing. Configuration is located in `backend/pyproject.toml`.
 
+For a detailed guide on our testing strategy and philosophy, see [docs/TESTING.md](docs/TESTING.md).
+
 ```bash
 # Run all tests
 pytest
@@ -283,6 +285,27 @@ pytest -m integration
 # Run with coverage (if pytest-cov is installed)
 pytest --cov=app tests/
 ```
+
+## Database Schema
+
+For a detailed visual diagram and explanation of the data models, see [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md).
+
+## Troubleshooting
+
+### Database Connection Fails
+
+- **Issue**: `OperationalError: connection to server at "localhost" ... failed`
+- **Solution**: Ensure your Docker container is running (`docker ps`). If running from inside another container, ensure you are using the correct network hostname (`host.docker.internal` or service name).
+
+### Migrations Not Applying
+
+- **Issue**: `alembic` command not found or dependency errors.
+- **Solution**: Ensure you are in the `backend/` directory and your virtual environment is active (`pyenv activate ...`).
+
+### Tests Failing
+
+- **Issue**: Tests fail with "relation does not exist".
+- **Solution**: Your test database might be uninitialized. Run migrations using `alembic upgrade head` before running tests, or check if the test fixture setup is correct.
 
 ## Environment Variables Reference
 
