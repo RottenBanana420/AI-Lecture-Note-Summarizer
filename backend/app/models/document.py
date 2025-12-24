@@ -6,7 +6,7 @@ file information, processing status, and manages relationships with
 users, summaries, and note chunks.
 """
 
-from sqlalchemy import Column, String, Integer, BigInteger, ForeignKey, Index, Enum as SQLEnum, DateTime
+from sqlalchemy import Column, String, Integer, BigInteger, ForeignKey, Index, Enum as SQLEnum, DateTime, CheckConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -123,10 +123,12 @@ class Document(Base, BaseModelMixin):
         doc="Text chunks extracted from this document"
     )
     
-    # Indexes for performance
+    # Indexes and constraints for performance and data integrity
     __table_args__ = (
         Index("ix_documents_user_status", "user_id", "processing_status"),
         Index("ix_documents_uploaded_at", "uploaded_at"),
+        # CHECK constraint to prevent negative file sizes
+        CheckConstraint("file_size >= 0", name="ck_documents_file_size_non_negative"),
         {"comment": "Documents table for storing uploaded document metadata"}
     )
     

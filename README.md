@@ -105,37 +105,34 @@ cd AI-Lecture-Note-Summarizer
 
 ### 2. Set Up Python Virtual Environment
 
-The virtual environment is configured at the project root using `pyenv-virtualenv`. It should activate automatically when you enter the project directory.
+The virtual environment should already be configured if you're in the backend directory. Verify it's active:
 
 ```bash
-# Verify the virtual environment is active (should show lecture-summarizer-backend)
-pyenv version
+cd backend
 
 # Check Python version (should show 3.11.x)
 python --version
+
+# Verify virtual environment is active
+pyenv version
 ```
 
 If the virtual environment is not active:
 
 ```bash
-# Activate the virtual environment manually
+# Activate the virtual environment
 pyenv activate lecture-summarizer-backend
 
-# Or set it for the project root
+# Or set it locally for this directory
 pyenv local lecture-summarizer-backend
 ```
 
-### 3. Backend Setup
-
-Most backend operations are performed from the `backend` directory:
+### 3. Install Dependencies
 
 ```bash
+# Ensure you are in the backend directory
 cd backend
-```
 
-#### Install Dependencies
-
-```bash
 # Ensure pip is up to date
 pip install --upgrade pip
 
@@ -143,7 +140,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-#### Configure Environment Variables
+### 4. Configure Environment Variables
 
 ```bash
 # Copy the example environment file
@@ -161,7 +158,7 @@ nano .env  # or use your preferred editor
 - `DEBUG`: Set to `False` in production
 - `CORS_ORIGINS`: Comma-separated list of allowed origins
 
-#### Set Up PostgreSQL Database
+### 5. Set Up PostgreSQL Database
 
 The project uses Docker Compose to manage a PostgreSQL instance with the `pgvector` extension.
 
@@ -178,7 +175,7 @@ PYTHONPATH=. python scripts/verify_models.py
 
 For detailed database configuration and manual setup instructions, see [docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md).
 
-#### Apply Database Migrations
+### 6. Apply Database Migrations
 
 The database schema is managed via Alembic. Apply the latest migrations to set up your tables and indexes:
 
@@ -232,17 +229,15 @@ Every request automatically includes:
 
 ### Virtual Environment Management
 
-The virtual environment is managed at the project root for global access.
-
 ```bash
-# Check status from anywhere in the project
-pyenv version
-
-# Activate manually
+# Activate virtual environment
 pyenv activate lecture-summarizer-backend
 
-# Deactivate
+# Deactivate virtual environment
 pyenv deactivate
+
+# List all virtual environments
+pyenv virtualenvs
 ```
 
 ### Adding New Dependencies
@@ -276,8 +271,6 @@ alembic history
 The project uses `pytest` for unit and integration testing. Configuration is located in `backend/pyproject.toml`.
 
 ```bash
-cd backend
-
 # Run all tests
 pytest
 

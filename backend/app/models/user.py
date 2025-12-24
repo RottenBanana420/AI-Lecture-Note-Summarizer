@@ -5,7 +5,7 @@ This module defines the User model which stores user identification,
 authentication information, and manages relationships with documents.
 """
 
-from sqlalchemy import Column, String, Index
+from sqlalchemy import Column, String, Index, CheckConstraint
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 from app.models.base_model import BaseModelMixin
@@ -84,10 +84,16 @@ class User(Base, BaseModelMixin):
         doc="Documents uploaded by this user"
     )
     
-    # Indexes for performance
+    # Indexes and constraints for performance and data integrity
     __table_args__ = (
         Index("ix_users_username_email", "username", "email"),
-        {"comment": "Users table for authentication and user management"}
+        # CHECK constraints to prevent empty strings
+        CheckConstraint("length(username) > 0", name="ck_users_username_not_empty"),
+        CheckConstraint("length(email) > 0", name="ck_users_email_not_empty"),
+        # CHECK constraints for boolean fields (must be '0' or '1')
+        CheckConstraint("is_active IN ('0', '1')", name="ck_users_is_active_valid"),
+        CheckConstraint("is_superuser IN ('0', '1')", name="ck_users_is_superuser_valid"),
+        {"comment": "Users table for authentication and user management"},
     )
     
     def __repr__(self):

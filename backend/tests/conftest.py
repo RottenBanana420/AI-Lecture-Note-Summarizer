@@ -130,7 +130,7 @@ def test_db_setup(test_engine):
         conn.execute(text("""
             DO $$ BEGIN
                 CREATE TYPE summary_type_enum AS ENUM (
-                    'brief', 'detailed', 'key_points'
+                    'extractive', 'abstractive'
                 );
             EXCEPTION
                 WHEN duplicate_object THEN null;

@@ -5,7 +5,7 @@ This module defines the Summary model which stores AI-generated summaries
 of documents with metadata about the summarization process.
 """
 
-from sqlalchemy import Column, String, Text, Integer, Float, ForeignKey, Index, Enum as SQLEnum, DateTime, JSON
+from sqlalchemy import Column, String, Text, Integer, Float, ForeignKey, Index, Enum as SQLEnum, DateTime, JSON, CheckConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 import enum
@@ -93,6 +93,8 @@ class Summary(Base):
     # Indexes for performance
     __table_args__ = (
         Index("ix_summaries_document_type", "document_id", "summary_type"),
+        # CHECK constraint to prevent negative processing duration
+        CheckConstraint("processing_duration >= 0", name="ck_summaries_processing_duration_non_negative"),
         {"comment": "Summaries table for storing AI-generated document summaries"}
     )
     
