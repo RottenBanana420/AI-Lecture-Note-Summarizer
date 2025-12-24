@@ -16,6 +16,9 @@ A FastAPI-based backend application for the AI Lecture Note Summarizer project. 
 - **Database Migrations**: Alembic for managing database schema changes
 - **Type-Safe Configuration**: Secure settings management with Pydantic Settings and strict validation
 - **Isolated Environment**: Python 3.11/3.12+ virtual environment support
+- **PDF Processing**: Robust PDF validation, text extraction, and structure-aware cleaning using PyMuPDF
+- **Intelligent Chunking**: Sentence-boundary-aware text segmentation using SpaCy for optimized semantic search
+- **Vector Embeddings**: Support for high-dimensional embeddings (1536-D) for accurate retrieval
 
 ## Core Data Models
 
@@ -24,7 +27,7 @@ The application implements a robust data model to manage the summarization lifec
 - **User**: Authentication and profile management (username, email, hashed password).
 - **Document**: Metadata for uploaded lecture notes (title, file path, processing status).
 - **Summary**: AI-generated summaries (extractive or abstractive) with processing metadata.
-- **NoteChunk**: Text segments with high-dimensional vector embeddings (1536-D) for semantic search.
+- **NoteChunk**: Text segments with high-dimensional vector embeddings (1536-D) for semantic search. These are automatically generated using our intelligent chunking service.
 
 ## Prerequisites
 
@@ -77,6 +80,9 @@ exec "$SHELL"
 │   │   │   └── user.py      # User model definition
 │   │   ├── schemas/         # Pydantic models (DTOs)
 │   │   ├── db/              # Database base utilities
+│   │   ├── services/        # Business logic services
+│   │   │   ├── pdf_processor.py # PDF validation and text extraction
+│   │   │   └── text_chunker.py  # Intelligent text chunking logic
 │   │   └── main.py          # FastAPI application entry point
 │   ├── alembic/             # Database migrations
 │   ├── scripts/             # Infrastructure and verification scripts
@@ -138,6 +144,9 @@ pip install --upgrade pip
 
 # Install project dependencies
 pip install -r requirements.txt
+
+# Download SpaCy English language model (required for text chunking)
+python -m spacy download en_core_web_sm
 ```
 
 ### 4. Configure Environment Variables

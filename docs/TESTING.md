@@ -13,13 +13,13 @@ The AI Lecture Note Summarizer uses `pytest` for a comprehensive testing strateg
 
 ### Unit Tests
 
-Located in `tests/test_crud/` (mostly) and `tests/test_models/`.
-These test individual components, functions, and models. While some use the DB session, we treat them as "units" of CRUD functionality.
+Located in `tests/test_crud/`, `tests/test_models/`, and `tests/test_pdf_processor.py` / `tests/test_text_chunker.py`.
+These test individual components, functions, and models. We mock external dependencies (like the file system in PDF tests) where appropriate, or use temporary directories.
 
 ### Integration Tests
 
-Located in `tests/integration/`.
-These test scenarios involving multiple components, complex queries, or full workflows (e.g., verifying that deleting a document cascades to chunks and summaries properly).
+Located in `tests/integration/` and `tests/test_pdf_real_world.py`.
+These test scenarios involving multiple components, complex queries, or full workflows (e.g., verifying that deleting a document cascades to chunks and summaries properly, or processing real-world PDF files).
 
 ## Running Tests
 
