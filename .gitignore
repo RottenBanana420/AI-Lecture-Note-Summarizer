@@ -22,6 +22,18 @@ __pycache__/
 *$py.class
 *.so
 
+# Testing & Coverage
+.coverage
+.coverage.*
+coverage.json
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+.nox/
+*.cover
+*.py,cover
+
 # Database
 postgres_data/
 backend/postgres_data/
