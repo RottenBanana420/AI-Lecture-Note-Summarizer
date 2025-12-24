@@ -212,7 +212,7 @@ The API will be available at:
 The application provides built-in health monitoring:
 
 | Endpoint | Purpose | Description |
-|----------|---------|-------------|
+| :--- | :--- | :--- |
 | `/health` | Basic | Checks if API service is running |
 | `/health/db` | Database | Verifies active database connectivity |
 | `/health/detailed` | Full System | Status of API, DB, and connection pool statistics |
