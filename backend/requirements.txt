@@ -28,3 +28,8 @@ httpx  # HTTP client for testing FastAPI applications (used by TestClient)
 # PDF Processing
 pymupdf  # High-performance PDF processing library for text extraction and manipulation
 python-multipart  # Parser for multipart/form-data (required for file uploads in FastAPI)
+
+# NLP and Text Processing
+spacy  # Industrial-strength NLP library for sentence tokenization and text processing
+# Note: After installing spacy, download the English language model:
+# python -m spacy download en_core_web_sm
