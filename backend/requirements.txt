@@ -14,3 +14,6 @@ alembic  # Lightweight database migration tool for SQLAlchemy
 # Environment Variables
 python-dotenv  # Read key-value pairs from .env file and set them as environment variables
 pydantic-settings  # Settings management using Pydantic for type-safe configuration
+
+# Vector Database Support
+pgvector  # PostgreSQL extension for vector similarity search with embeddings

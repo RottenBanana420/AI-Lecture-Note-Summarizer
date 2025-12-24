@@ -6,9 +6,19 @@ A FastAPI-based backend application for the AI Lecture Note Summarizer project. 
 
 - **FastAPI Framework**: Modern, fast (high-performance) web framework for building APIs
 - **PostgreSQL Database**: Robust relational database with SQLAlchemy ORM
+- **pgvector Integration**: Vector similarity search for semantic retrieval of lecture note chunks
 - **Database Migrations**: Alembic for managing database schema changes
-- **Environment Configuration**: Secure configuration management with python-dotenv
+- **Environment Configuration**: Secure configuration management with python-dotenv and pydantic-settings
 - **Isolated Environment**: Python 3.11 virtual environment using pyenv-virtualenv
+
+## Core Data Models
+
+The application implements a robust data model to manage the summarization lifecycle:
+
+- **User**: Authentication and profile management (username, email, hashed password).
+- **Document**: Metadata for uploaded lecture notes (title, file path, processing status).
+- **Summary**: AI-generated summaries (extractive or abstractive) with processing metadata.
+- **NoteChunk**: Text segments with high-dimensional vector embeddings (1536-D) for semantic search.
 
 ## Prerequisites
 
@@ -45,9 +55,18 @@ exec "$SHELL"
 .
 ├── backend/                 # FastAPI backend application
 │   ├── app/                 # Application source code
+│   │   ├── api/             # API v1 endpoints
+│   │   ├── core/            # Config, security, database setup
+│   │   ├── db/              # Database base and session manager
+│   │   ├── models/          # SQLAlchemy ORM models
+│   │   ├── schemas/         # Pydantic models (DTOs)
+│   │   └── main.py          # FastAPI application entry point
 │   ├── alembic/             # Database migrations
-│   ├── scripts/             # Infrastructure helper scripts
-│   ├── init-scripts/        # Database initialization SQL
+│   ├── scripts/             # Infrastructure and verification scripts
+│   │   ├── start-db.sh      # Start PostgreSQL/pgvector container
+│   │   ├── verify-db.sh     # Verify DB and extension status
+│   │   └── verify_models.py # Verify SQLAlchemy model definitions
+│   ├── init-scripts/        # Database initialization SQL (pgvector)
 │   ├── tests/               # Backend tests
 │   ├── docker-compose.yml   # Docker services
 │   ├── requirements.txt     # Python dependencies
@@ -72,11 +91,10 @@ cd AI-Lecture-Note-Summarizer
 The virtual environment should already be configured if you're in the backend directory. Verify it's active:
 
 ```bash
-# Check Python version (should show 3.11.14)
-python --version
+cd backend
 
-# Check which Python is being used (should point to pyenv)
-which python
+# Check Python version (should show 3.11.x)
+python --version
 
 # Verify virtual environment is active
 pyenv version
@@ -124,10 +142,13 @@ The project uses Docker Compose to manage a PostgreSQL instance with the `pgvect
 
 ```bash
 # Start the database using the helper script
-./backend/scripts/start-db.sh
+./scripts/start-db.sh
 
 # Verify the setup
-./backend/scripts/verify-db.sh
+./scripts/verify-db.sh
+
+# Verify model definitions
+PYTHONPATH=. python scripts/verify_models.py
 ```
 
 For detailed database configuration and manual setup instructions, see [docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md).
@@ -160,13 +181,6 @@ The API will be available at:
 - **Interactive API docs (Swagger)**: <http://localhost:8000/docs>
 - **Alternative API docs (ReDoc)**: <http://localhost:8000/redoc>
 
-### Production Server
-
-```bash
-# Run with multiple workers
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 4
-```
-
 ## Development Workflow
 
 ### Virtual Environment Management
@@ -180,9 +194,6 @@ pyenv deactivate
 
 # List all virtual environments
 pyenv virtualenvs
-
-# Verify isolation
-pip list  # Should only show installed project dependencies
 ```
 
 ### Adding New Dependencies
@@ -191,10 +202,7 @@ pip list  # Should only show installed project dependencies
 # Install new package
 pip install package-name
 
-# Update requirements.txt
-pip freeze > requirements.txt
-
-# Or manually add to requirements.txt (recommended for cleaner file)
+# Update requirements.txt (manually adding is recommended for cleaner file)
 echo "package-name  # Description of what this package does" >> requirements.txt
 ```
 
@@ -222,21 +230,11 @@ pytest
 
 # Run with coverage
 pytest --cov=app tests/
-
-# Run specific test file
-pytest tests/test_example.py
 ```
-
-## API Documentation
-
-Once the server is running, visit:
-
-- **Swagger UI**: <http://localhost:8000/docs>
-- **ReDoc**: <http://localhost:8000/redoc>
 
 ## Environment Variables Reference
 
-See `.env.example` for a complete list of configurable environment variables.
+See `backend/.env.example` for a complete list of configurable environment variables.
 
 ### Required Variables
 
@@ -250,43 +248,6 @@ See `.env.example` for a complete list of configurable environment variables.
 - `CORS_ORIGINS`: Comma-separated list of allowed CORS origins
 - `API_V1_PREFIX`: API version 1 prefix (default: /api/v1)
 
-## Troubleshooting
-
-### Virtual Environment Issues
-
-```bash
-# If virtual environment is not activating
-pyenv virtualenv 3.11.14 lecture-summarizer-backend
-pyenv local lecture-summarizer-backend
-
-# If Python version is incorrect
-pyenv install 3.11.14
-pyenv virtualenv 3.11.14 lecture-summarizer-backend
-```
-
-### Database Connection Issues
-
-```bash
-# Check PostgreSQL is running
-brew services list | grep postgresql
-
-# Test database connection
-psql -U your_username -d lecture_summarizer
-
-# Check DATABASE_URL format
-# postgresql://username:password@host:port/database_name
-```
-
-### Dependency Issues
-
-```bash
-# Clear pip cache
-pip cache purge
-
-# Reinstall all dependencies
-pip install --force-reinstall -r requirements.txt
-```
-
 ## Contributing
 
 1. Create a new branch for your feature
@@ -297,8 +258,8 @@ pip install --force-reinstall -r requirements.txt
 
 ## License
 
-[Add your license information here]
+[MIT License](LICENSE)
 
 ## Contact
 
-[Add contact information or links to documentation]
+For questions or support, please open an issue in the repository.
