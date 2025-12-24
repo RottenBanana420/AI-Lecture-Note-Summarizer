@@ -39,6 +39,13 @@ addopts = [
     "--durations=10",               # Show 10 slowest tests
 ]
 
+# Warning filters
+filterwarnings = [
+    "ignore:builtin type SwigPyPacked has no __module__ attribute:DeprecationWarning",
+    "ignore:builtin type SwigPyObject has no __module__ attribute:DeprecationWarning",
+    "ignore:builtin type swigvarlink has no __module__ attribute:DeprecationWarning",
+]
+
 # Coverage configuration
 [tool.coverage.run]
 source = ["app"]
