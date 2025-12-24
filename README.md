@@ -6,11 +6,14 @@ A FastAPI-based backend application for the AI Lecture Note Summarizer project. 
 
 - **FastAPI Framework**: Modern, fast (high-performance) web framework for building APIs
 - **PostgreSQL Database**: Robust relational database with SQLAlchemy ORM
-- **pgvector Integration**: High-performance vector similarity search with HNSW indexes for semantic retrieval
-- **Connection Pooling**: Production-ready connection pooling and session management using SQLAlchemy 2.0 best practices
+- **pgvector Integration**: High-performance vector similarity search with semantic retrieval
+- **Middleware Stack**: Production-ready middleware for Request ID tracing, GZip compression, and response timing
+- **Enhanced Logging**: Structured logging for requests/responses and automatic error tracking
+- **Health Monitoring**: Multiple health check endpoints for system, database, and connection pool status
+- **Connection Pooling**: Optimized session management with SQLAlchemy 2.0 best practices
 - **Database Migrations**: Alembic for managing database schema changes
-- **Environment Configuration**: Secure configuration management with python-dotenv and pydantic-settings
-- **Isolated Environment**: Python 3.11 virtual environment using pyenv-virtualenv
+- **Type-Safe Configuration**: Secure settings management with Pydantic Settings and strict validation
+- **Isolated Environment**: Python 3.11/3.12+ virtual environment support
 
 ## Core Data Models
 
@@ -56,9 +59,13 @@ exec "$SHELL"
 .
 ├── backend/                 # FastAPI backend application
 │   ├── app/                 # Application source code
-│   │   ├── api/             # API v1 endpoints
+│   │   ├── api/             # API versioned endpoints
+│   │   │   ├── health.py    # Health check endpoints
+│   │   │   └── v1/          # API v1 routes (future)
 │   │   ├── core/            # Config, security, database setup
-│   │   ├── db/              # Database base and session manager
+│   │   │   ├── config.py    # Settings and environment validation
+│   │   │   ├── database.py  # SQLAlchemy engine and pooling
+│   │   │   └── middleware.py # Request tracing and logging middleware
 │   │   ├── models/          # SQLAlchemy ORM models
 │   │   ├── schemas/         # Pydantic models (DTOs)
 │   │   └── main.py          # FastAPI application entry point
@@ -134,8 +141,10 @@ nano .env  # or use your preferred editor
 **Important**: Update the following variables in `.env`:
 
 - `DATABASE_URL`: Your PostgreSQL connection string
-- `SECRET_KEY`: Generate a secure random string
+- `SECRET_KEY`: Generate a secure random string (min 32 chars in production)
+- `ENVIRONMENT`: Set to `development`, `staging`, or `production`
 - `DEBUG`: Set to `False` in production
+- `CORS_ORIGINS`: Comma-separated list of allowed origins
 
 ### 5. Set Up PostgreSQL Database
 
@@ -180,9 +189,29 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 The API will be available at:
 
-- **API**: <http://localhost:8000>
+- **API Root**: <http://localhost:8000>
+- **Health Check**: <http://localhost:8000/health>
+- **Detailed Health**: <http://localhost:8000/health/detailed>
 - **Interactive API docs (Swagger)**: <http://localhost:8000/docs>
 - **Alternative API docs (ReDoc)**: <http://localhost:8000/redoc>
+
+### Monitoring & Health Checks
+
+The application provides built-in health monitoring:
+
+| Endpoint | Purpose | Description |
+|----------|---------|-------------|
+| `/health` | Basic | Checks if API service is running |
+| `/health/db` | Database | Verifies active database connectivity |
+| `/health/detailed` | Full System | Status of API, DB, and connection pool statistics |
+
+### Request Tracing & Performance
+
+Every request automatically includes:
+
+- `X-Request-ID`: Unique ID for tracing across logs
+- `X-Process-Time`: Server-side processing duration in milliseconds
+- Structured logging with client IP and request metadata
 
 ## Development Workflow
 

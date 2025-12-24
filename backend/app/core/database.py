@@ -215,7 +215,8 @@ def check_database_connection() -> bool:
     try:
         # Try to connect and execute a simple query
         with engine.connect() as connection:
-            connection.execute("SELECT 1")
+            from sqlalchemy import text
+            connection.execute(text("SELECT 1"))
         logger.info("Database connection successful")
         return True
     except SQLAlchemyError as e:
