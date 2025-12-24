@@ -77,7 +77,7 @@ class Document(Base, BaseModelMixin):
     
     # Processing status
     processing_status = Column(
-        SQLEnum(ProcessingStatus, name="processing_status_enum"),
+        SQLEnum(ProcessingStatus, name="processing_status_enum", values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         server_default=ProcessingStatus.PENDING.value,
         index=True,
@@ -87,7 +87,7 @@ class Document(Base, BaseModelMixin):
     # Foreign key to User
     user_id = Column(
         Integer,
-        ForeignKey("users.id", ondelete="SET NULL"),
+        ForeignKey("users.id", ondelete="CASCADE"),
         nullable=True,
         index=True,
         comment="ID of the user who uploaded the document"

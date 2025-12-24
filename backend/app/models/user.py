@@ -79,6 +79,7 @@ class User(Base, BaseModelMixin):
         "Document",
         back_populates="owner",
         cascade="save-update, merge",
+        passive_deletes=True,
         lazy="dynamic",
         doc="Documents uploaded by this user"
     )

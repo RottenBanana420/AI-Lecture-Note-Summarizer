@@ -58,7 +58,7 @@ class Summary(Base):
     
     # Summary metadata
     summary_type = Column(
-        SQLEnum(SummaryType, name="summary_type_enum"),
+        SQLEnum(SummaryType, name="summary_type_enum", values_callable=lambda x: [e.value for e in x]),
         nullable=False,
         index=True,
         comment="Type of summary generation method used"

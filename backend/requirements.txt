@@ -17,3 +17,10 @@ pydantic-settings  # Settings management using Pydantic for type-safe configurat
 
 # Vector Database Support
 pgvector  # PostgreSQL extension for vector similarity search with embeddings
+
+# Testing Framework
+pytest  # Modern testing framework with powerful features and plugins
+pytest-asyncio  # Pytest plugin for testing asyncio code
+pytest-cov  # Coverage plugin for pytest using coverage.py
+pytest-xdist  # Pytest plugin for distributed/parallel test execution
+httpx  # HTTP client for testing FastAPI applications (used by TestClient)

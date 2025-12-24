@@ -333,13 +333,14 @@ class TestDatabaseIntegration:
     def test_session_can_execute_query(self):
         """Test that session can execute a simple query."""
         from app.core.database import get_db
+        from sqlalchemy import text
         
         db_generator = get_db()
         db = next(db_generator)
         
         try:
             # Execute a simple query
-            result = db.execute("SELECT 1 as test")
+            result = db.execute(text("SELECT 1 as test"))
             row = result.fetchone()
             assert row[0] == 1
         except OperationalError:
