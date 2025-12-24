@@ -1,0 +1,33 @@
+[tool.pytest.ini_options]
+# Pytest configuration for the backend application
+
+# Test discovery patterns
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# Test paths
+testpaths = ["tests"]
+
+# Markers for categorizing tests
+markers = [
+    "integration: marks tests as integration tests requiring database connection (deselect with '-m \"not integration\"')",
+    "unit: marks tests as unit tests (fast, no external dependencies)",
+    "slow: marks tests that take a long time to run",
+]
+
+# Output options
+addopts = [
+    "-v",                    # Verbose output
+    "--strict-markers",      # Raise error on unknown markers
+    "--tb=short",            # Shorter traceback format
+    "-ra",                   # Show summary of all test outcomes
+]
+
+# Coverage options (if using pytest-cov)
+# Uncomment when pytest-cov is installed
+# addopts = [
+#     "--cov=app",
+#     "--cov-report=term-missing",
+#     "--cov-report=html",
+# ]
