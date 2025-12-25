@@ -96,7 +96,13 @@ exec "$SHELL"
 │   ├── requirements.txt     # Python dependencies
 │   └── .env.example         # Environment template
 ├── docs/                    # Project documentation
-│   └── DATABASE_SETUP.md    # Detailed database setup guide
+│   ├── API_USAGE.md         # API endpoint usage and examples
+│   ├── DATABASE_SCHEMA.md   # Database schema and ER diagrams
+│   ├── DATABASE_SETUP.md    # Detailed database setup guide
+│   ├── PDF_PROCESSING.md    # PDF processing pipeline documentation
+│   ├── PERFORMANCE.md       # Performance benchmarks and optimization
+│   ├── TESTING.md           # Testing strategy and guide
+│   └── TROUBLESHOOTING.md   # Common issues and solutions
 ├── README.md                # This file
 └── LICENSE                  # Project license
 ```
@@ -307,6 +313,18 @@ pytest --cov=app tests/
 ## Database Schema
 
 For a detailed visual diagram and explanation of the data models, see [docs/DATABASE_SCHEMA.md](docs/DATABASE_SCHEMA.md).
+
+## Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+- **[API Usage Guide](docs/API_USAGE.md)**: Detailed API endpoint documentation with request/response examples
+- **[PDF Processing](docs/PDF_PROCESSING.md)**: In-depth guide to the PDF processing pipeline, validation, and text extraction
+- **[Performance Benchmarks](docs/PERFORMANCE.md)**: Performance metrics, optimization strategies, and benchmarking results
+- **[Testing Guide](docs/TESTING.md)**: Testing strategy, running tests, and writing new tests
+- **[Database Setup](docs/DATABASE_SETUP.md)**: Detailed database configuration and troubleshooting
+- **[Database Schema](docs/DATABASE_SCHEMA.md)**: ER diagrams and schema documentation
+- **[Troubleshooting](docs/TROUBLESHOOTING.md)**: Common issues and their solutions
 
 ## Troubleshooting
 

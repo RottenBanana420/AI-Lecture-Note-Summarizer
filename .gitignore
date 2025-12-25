@@ -38,6 +38,14 @@ htmlcov/
 postgres_data/
 backend/postgres_data/
 
+# Uploads
+uploads/
+backend/uploads/
+
+# Performance test results
+backend/tests/performance/results/
+*.benchmark.json
+
 # OS
 .DS_Store
 .AppleDouble
