@@ -83,6 +83,11 @@ Metadata for uploaded files and their processing status.
 - **file_path**: Unique storage path/key for the file.
 - **processing_status**: ENUM (`pending`, `processing`, `completed`, `failed`).
 - **uploaded_at**: Upload timestamp.
+- **original_filename**: Original name of the uploaded document.
+- **file_size**: Size of the file in bytes.
+- **mime_type**: MIME type of the file.
+- **page_count**: Number of pages in the PDF document.
+- **error_message**: Error message if processing failed.
 
 ### Summaries (`summaries`)
 

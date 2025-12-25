@@ -62,6 +62,15 @@ pytest tests/test_crud/test_document.py::TestDocumentCRUD::test_create_document
 pytest --cov=app tests/
 ```
 
+### Parallel Execution
+
+To speed up test execution, you can run tests in parallel using `pytest-xdist`:
+
+```bash
+# Run tests in parallel using auto-detected number of CPU cores
+pytest -n auto
+```
+
 ## Test Fixtures
 
 Our `conftest.py` provides several powerful fixtures:
