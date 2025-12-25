@@ -84,6 +84,18 @@ class Document(Base, BaseModelMixin):
         comment="Current processing status of the document"
     )
     
+    # Processing metadata
+    page_count = Column(
+        Integer,
+        nullable=True,
+        comment="Number of pages in the PDF document"
+    )
+    error_message = Column(
+        String(1000),
+        nullable=True,
+        comment="Error message if processing failed"
+    )
+    
     # Foreign key to User
     user_id = Column(
         Integer,

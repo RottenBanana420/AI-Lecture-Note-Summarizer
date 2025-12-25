@@ -266,6 +266,10 @@ async def general_exception_handler(
 # Include health check endpoints (no prefix, available at root)
 app.include_router(health_router)
 
+# Include API v1 endpoints
+from app.api.v1 import api_router as api_v1_router
+app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)
+
 # Root endpoint
 @app.get("/", tags=["Root"])
 async def root() -> dict:
@@ -284,8 +288,3 @@ async def root() -> dict:
         "health": "/health",
     }
 
-
-# Future API v1 routes will be added here
-# Example:
-# from app.api.v1 import api_router as api_v1_router
-# app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)

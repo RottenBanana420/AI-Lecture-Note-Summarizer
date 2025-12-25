@@ -136,6 +136,33 @@ class Settings(BaseSettings):
     )
     
     # ========================================================================
+    # File Upload Configuration
+    # ========================================================================
+    UPLOAD_DIR: str = Field(
+        default="uploads",
+        description="Directory for storing uploaded files"
+    )
+    MAX_UPLOAD_SIZE: int = Field(
+        default=50 * 1024 * 1024,  # 50MB in bytes
+        description="Maximum file size in bytes"
+    )
+    ALLOWED_MIME_TYPES: str = Field(
+        default="application/pdf",
+        description="Comma-separated list of allowed MIME types"
+    )
+    
+    @computed_field
+    @property
+    def ALLOWED_MIME_TYPES_LIST(self) -> List[str]:
+        """
+        Parse allowed MIME types from comma-separated string to list.
+        
+        Returns:
+            List[str]: List of allowed MIME types
+        """
+        return [mime.strip() for mime in self.ALLOWED_MIME_TYPES.split(",")]
+    
+    # ========================================================================
     # Validators
     # ========================================================================
     

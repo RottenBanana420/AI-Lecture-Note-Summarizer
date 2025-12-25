@@ -19,6 +19,7 @@ A FastAPI-based backend application for the AI Lecture Note Summarizer project. 
 - **PDF Processing**: Robust PDF validation, text extraction, and structure-aware cleaning using PyMuPDF
 - **Intelligent Chunking**: Sentence-boundary-aware text segmentation using SpaCy for optimized semantic search
 - **Vector Embeddings**: Support for high-dimensional embeddings (1536-D) for accurate retrieval
+- **Document Upload API**: Production-ready endpoint for handling multipart PDF uploads with transaction-aware processing and automatic resource cleanup
 
 ## Core Data Models
 
@@ -166,6 +167,8 @@ nano .env  # or use your preferred editor
 - `ENVIRONMENT`: Set to `development`, `staging`, or `production`
 - `DEBUG`: Set to `False` in production
 - `CORS_ORIGINS`: Comma-separated list of allowed origins
+- `UPLOAD_DIR`: Local directory for stored PDF files (default: `uploads`)
+- `MAX_UPLOAD_SIZE`: Maximum allowed file size in bytes (default: 50MB)
 
 ### 5. Set Up PostgreSQL Database
 
@@ -215,6 +218,12 @@ The API will be available at:
 - **Detailed Health**: <http://localhost:8000/health/detailed>
 - **Interactive API docs (Swagger)**: <http://localhost:8000/docs>
 - **Alternative API docs (ReDoc)**: <http://localhost:8000/redoc>
+
+### Key API Endpoints (v1)
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `POST` | `/api/v1/documents/upload` | Upload and process a PDF document (multipart/form-data) |
 
 ### Monitoring & Health Checks
 

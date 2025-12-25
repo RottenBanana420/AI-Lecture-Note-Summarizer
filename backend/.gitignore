@@ -152,3 +152,6 @@ postgres_data/
 
 # Alembic
 alembic/versions/*.pyc
+
+# Local Uploader Storage
+uploads/

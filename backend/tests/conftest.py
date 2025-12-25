@@ -418,3 +418,57 @@ def reset_sequences(db_session: Session):
     # Reset sequences if needed
     # This is typically not necessary with transaction rollback
     pass
+
+
+# ============================================================================
+# PDF Test Fixtures
+# ============================================================================
+
+@pytest.fixture
+def valid_pdf_bytes():
+    """
+    Generate a valid minimal PDF file for testing.
+    
+    Returns:
+        bytes: Valid PDF file content
+    """
+    import fitz  # PyMuPDF
+    
+    # Create a simple PDF with one page
+    doc = fitz.open()
+    page = doc.new_page()
+    
+    # Add some text to the page
+    text = "This is a test PDF document for unit testing."
+    page.insert_text((72, 72), text)
+    
+    # Convert to bytes
+    pdf_bytes = doc.tobytes()
+    doc.close()
+    
+    return pdf_bytes
+
+
+@pytest.fixture
+def multi_page_pdf_bytes():
+    """
+    Generate a multi-page PDF for testing.
+    
+    Returns:
+        bytes: Multi-page PDF file content
+    """
+    import fitz  # PyMuPDF
+    
+    doc = fitz.open()
+    
+    # Create 3 pages with different content
+    for i in range(3):
+        page = doc.new_page()
+        text = f"This is page {i + 1} of the test document."
+        page.insert_text((72, 72), text)
+    
+    pdf_bytes = doc.tobytes()
+    doc.close()
+    
+    return pdf_bytes
+
