@@ -18,6 +18,7 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.exceptions import RequestValidationError
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.core.config import settings
@@ -159,6 +160,46 @@ app.add_middleware(LoggingMiddleware)
 # ============================================================================
 # Exception Handlers
 # ============================================================================
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request, exc: RequestValidationError
+) -> JSONResponse:
+    """
+    Handle FastAPI request validation errors.
+    
+    Formats validation errors as a single string instead of a list
+    to maintain consistency with other error responses.
+    
+    Args:
+        request: The request that caused the error
+        exc: The RequestValidationError exception
+        
+    Returns:
+        JSONResponse with formatted error message
+    """
+    request_id = getattr(request.state, "request_id", "unknown")
+    
+    # Format validation errors as a readable string
+    errors = exc.errors()
+    error_messages = []
+    
+    for error in errors:
+        loc = " -> ".join(str(x) for x in error["loc"])
+        msg = error["msg"]
+        error_messages.append(f"{loc}: {msg}")
+    
+    detail = "; ".join(error_messages)
+    
+    logger.warning(
+        f"[{request_id}] Validation error in {request.method} {request.url.path}: {detail}"
+    )
+    
+    return JSONResponse(
+        status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+        content={"detail": detail},
+    )
+
 
 @app.exception_handler(SQLAlchemyError)
 async def sqlalchemy_exception_handler(

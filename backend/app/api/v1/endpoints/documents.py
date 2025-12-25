@@ -166,11 +166,44 @@ async def upload_document(
         )
         
     except UploadServiceError as e:
-        logger.error(f"Upload service error: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Upload failed: {str(e)}",
-        )
+        # Check if it's a database integrity error (foreign key, unique constraint, etc.)
+        error_str = str(e).lower()
+        if "foreign key" in error_str or "foreignkeyviolation" in error_str:
+            logger.warning(f"Foreign key violation during upload: {str(e)}")
+            # Extract meaningful message
+            if "user_id" in error_str:
+                detail = "Invalid user_id: user does not exist"
+            else:
+                detail = "Invalid reference: related record does not exist"
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=detail,
+            )
+        elif "unique constraint" in error_str or "uniqueviolation" in error_str:
+            logger.warning(f"Unique constraint violation during upload: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Duplicate record: a record with this value already exists",
+            )
+        elif "value too long" in error_str or "stringdatarighttruncation" in error_str:
+            logger.warning(f"String truncation error during upload: {str(e)}")
+            # Determine which field is too long
+            if "original_filename" in error_str or "filename" in error_str:
+                detail = "Filename is too long (maximum 255 characters)"
+            elif "title" in error_str:
+                detail = "Title is too long (maximum 255 characters)"
+            else:
+                detail = "Input value is too long for database field"
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=detail,
+            )
+        else:
+            logger.error(f"Upload service error: {str(e)}")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Upload failed: {str(e)}",
+            )
         
     except HTTPException:
         # Re-raise HTTP exceptions
